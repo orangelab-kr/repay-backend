@@ -1,8 +1,5 @@
+import { InternalError, logger } from '.';
 import { NextFunction, Request, Response } from 'express';
-
-import InternalError from './error';
-import OPCODE from './opcode';
-import logger from './logger';
 
 type Callback = (
   req: Request,
@@ -10,7 +7,7 @@ type Callback = (
   next: NextFunction
 ) => Promise<unknown>;
 
-export default function Wrapper(cb: Callback): Callback {
+export function Wrapper(cb: Callback): Callback {
   return async function (req: Request, res: Response, next: NextFunction) {
     try {
       return await cb(req, res, next);
@@ -20,16 +17,16 @@ export default function Wrapper(cb: Callback): Callback {
         logger.error(err.stack);
       }
 
-      let status = 500;
+      let opcode;
       let message = '알 수 없는 오류가 발생했습니다.';
 
       if (err instanceof InternalError) {
-        status = err.status;
+        opcode = err.opcode;
         message = err.message;
       }
 
-      res.status(status).json({
-        opcode: OPCODE.ERROR,
+      res.status(500).json({
+        opcode,
         message,
       });
     }
