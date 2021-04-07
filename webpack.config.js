@@ -4,9 +4,9 @@ const nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
 
 module.exports = {
+  mode: 'none',
   target: 'node',
   entry: slsw.lib.entries,
-  mode: process.env.NODE_ENV === 'dev' ? 'development' : 'production',
   externals: [nodeExternals()],
   resolve: {
     extensions: ['.ts', '.js'],
