@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 
+import getApiRouter from './api';
 import { logger } from '../tools';
 import morgan from 'morgan';
 
@@ -12,7 +13,7 @@ export default function getRouter(): Application {
   router.use(logging);
   router.use(express.json());
   router.use(express.urlencoded({ extended: true }));
-  // router.use('/api', getApiRouter());
+  router.use('/api', getApiRouter());
 
   router.get('*', (req, res) =>
     res.send(`\
