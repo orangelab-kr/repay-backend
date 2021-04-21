@@ -24,5 +24,6 @@ export async function getPrice(
   const removedMinutes = minutes - costData.freeTime;
   if (removedMinutes <= 0) return price;
   price += costData.addedCost * removedMinutes;
+  if (price >= 50000) return 50000;
   return price;
 }

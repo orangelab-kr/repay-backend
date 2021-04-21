@@ -1,6 +1,7 @@
 import {
   InternalError,
   OPCODE,
+  Webhook,
   Wrapper,
   firestore,
   getPrice,
@@ -42,6 +43,10 @@ export default function getApiRouter(): Router {
           OPCODE.ERROR
         );
       }
+
+      await Webhook.send(
+        `🤔 ${userData.name}님께서 결제 페이지에 진입하였습니다. ${price}원 / ${userData.phone} / ${rideData.branch}`
+      );
 
       res.json({
         opcode: OPCODE.SUCCESS,
@@ -120,6 +125,10 @@ export default function getApiRouter(): Router {
           .doc(userRideId)
           .update({ unpaied: false });
       }
+
+      await Webhook.send(
+        `🎉 ${userData.name}님께서 결제를 완료하였습니다. ${price}원 / ${userData.phone} / ${rideData.branch}`
+      );
 
       res.json({ opcode: OPCODE.SUCCESS });
     })
